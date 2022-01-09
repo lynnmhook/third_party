@@ -71,27 +71,27 @@ if (OPENSSL_ROOT_DIR)
   set(_CMAKE_ARGS_OPENSSL_ROOT_DIR "-DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}")
 endif()
 
-#
-# Build libcurl
-#
-ExternalProject_Add(curl
-  PREFIX curl
-  GIT_REPOSITORY "https://github.com/curl/curl.git"
-  GIT_TAG "curl-7_66_0"
-  SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/curl/src/curl"
-  CMAKE_CACHE_ARGS
-    ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
-    ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
-    -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
-    -DBUILD_TESTING:BOOL=OFF
-    -DBUILD_CURL_EXE:BOOL=OFF
-    -DBUILD_SHARED_LIBS:BOOL=OFF
-    -DCURL_STATICLIB:BOOL=ON
-    -DHTTP_ONLY:BOOL=ON
-    -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-    -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/curl
-  PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
-)
+# #
+# # Build libcurl
+# #
+# ExternalProject_Add(curl
+#   PREFIX curl
+#   GIT_REPOSITORY "https://github.com/curl/curl.git"
+#   GIT_TAG "curl-7_66_0"
+#   SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/curl/src/curl"
+#   CMAKE_CACHE_ARGS
+#     ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
+#     ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
+#     -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+#     -DBUILD_TESTING:BOOL=OFF
+#     -DBUILD_CURL_EXE:BOOL=OFF
+#     -DBUILD_SHARED_LIBS:BOOL=OFF
+#     -DCURL_STATICLIB:BOOL=ON
+#     -DHTTP_ONLY:BOOL=ON
+#     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+#     -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/curl
+#   PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
+# )
 
 #
 # Get the protobuf and grpc source used for the GRPC endpoint. We must
@@ -329,30 +329,30 @@ ExternalProject_Add(libevhtp
 )
 endif()
 
-#
-# Build Prometheus C++ library
-#
-# Use -DCMAKE_INSTALL_LIBDIR:STRING=lib to workaround a build issue on centos/rhel where it defaults to lib64
-# described in https://stackoverflow.com/q/68974636
-#
-ExternalProject_Add(prometheus-cpp
-  PREFIX prometheus-cpp
-  URL "https://github.com/jupp0r/prometheus-cpp/archive/v0.7.0.tar.gz"
-  URL_HASH SHA256=93907d937fa7eab9605cba786123d3eba4e87e3dca8ecec93ff9eae4eef8de5a
-  SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/prometheus-cpp/src/prometheus-cpp"
-  CMAKE_CACHE_ARGS
-    ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
-    ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
-    -DENABLE_PUSH:BOOL=OFF
-    -DENABLE_PULL:BOOL=OFF
-    -DENABLE_TESTING:BOOL=OFF
-    -DUSE_THIRDPARTY_LIBRARIES:BOOL=OFF
-    -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
-    -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-    -DCMAKE_INSTALL_LIBDIR:STRING=lib
-    -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/prometheus-cpp
-  PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
-)
+# #
+# # Build Prometheus C++ library
+# #
+# # Use -DCMAKE_INSTALL_LIBDIR:STRING=lib to workaround a build issue on centos/rhel where it defaults to lib64
+# # described in https://stackoverflow.com/q/68974636
+# #
+# ExternalProject_Add(prometheus-cpp
+#   PREFIX prometheus-cpp
+#   URL "https://github.com/jupp0r/prometheus-cpp/archive/v0.7.0.tar.gz"
+#   URL_HASH SHA256=93907d937fa7eab9605cba786123d3eba4e87e3dca8ecec93ff9eae4eef8de5a
+#   SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/prometheus-cpp/src/prometheus-cpp"
+#   CMAKE_CACHE_ARGS
+#     ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
+#     ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
+#     -DENABLE_PUSH:BOOL=OFF
+#     -DENABLE_PULL:BOOL=OFF
+#     -DENABLE_TESTING:BOOL=OFF
+#     -DUSE_THIRDPARTY_LIBRARIES:BOOL=OFF
+#     -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+#     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+#     -DCMAKE_INSTALL_LIBDIR:STRING=lib
+#     -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/prometheus-cpp
+#   PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
+# )
 
 #
 # Build crc32c
@@ -378,63 +378,63 @@ ExternalProject_Add(crc32c
   PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
 )
 
-# This is necessary because google-cloud-cpp
-# does not pass protobuf_DIR and gRPC_DIR etc to its
-# external projects but expects them in CMAKE_PREFIX_PATH.
-#
-# absl must preceed grpc to ensure that the absl from the newer grpc
-# repo is used and not the absl from the older grpc.
-set(GCS_CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}
-   ${TRITON_THIRD_PARTY_INSTALL_PREFIX}/c-ares/lib/cmake/c-ares
-   ${TRITON_THIRD_PARTY_INSTALL_PREFIX}/absl/lib/cmake/absl
-   ${TRITON_THIRD_PARTY_INSTALL_PREFIX}/crc32c/lib/cmake/Crc32c
-   ${TRITON_THIRD_PARTY_INSTALL_PREFIX}/grpc/lib/cmake/grpc
-   ${TRITON_THIRD_PARTY_INSTALL_PREFIX}/nlohmann_json/lib/cmake/nlohmann_json
-   ${_FINDPACKAGE_PROTOBUF_CONFIG_DIR})
+# # This is necessary because google-cloud-cpp
+# # does not pass protobuf_DIR and gRPC_DIR etc to its
+# # external projects but expects them in CMAKE_PREFIX_PATH.
+# #
+# # absl must preceed grpc to ensure that the absl from the newer grpc
+# # repo is used and not the absl from the older grpc.
+# set(GCS_CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}
+#    ${TRITON_THIRD_PARTY_INSTALL_PREFIX}/c-ares/lib/cmake/c-ares
+#    ${TRITON_THIRD_PARTY_INSTALL_PREFIX}/absl/lib/cmake/absl
+#    ${TRITON_THIRD_PARTY_INSTALL_PREFIX}/crc32c/lib/cmake/Crc32c
+#    ${TRITON_THIRD_PARTY_INSTALL_PREFIX}/grpc/lib/cmake/grpc
+#    ${TRITON_THIRD_PARTY_INSTALL_PREFIX}/nlohmann_json/lib/cmake/nlohmann_json
+#    ${_FINDPACKAGE_PROTOBUF_CONFIG_DIR})
 
 #
-# Build google-cloud-cpp
-#
-ExternalProject_Add(google-cloud-cpp
-  PREFIX google-cloud-cpp
-  GIT_REPOSITORY "https://github.com/googleapis/google-cloud-cpp.git"
-  GIT_TAG "v1.23.0"
-  SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/google-cloud-cpp/src/google-cloud-cpp"
-  CMAKE_CACHE_ARGS
-    ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
-    ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
-    -DGOOGLE_CLOUD_CPP_DEPENDENCY_PROVIDER:STRING=package
-    -DBUILD_TESTING:BOOL=OFF
-    -DCMAKE_PREFIX_PATH:PATH=${GCS_CMAKE_PREFIX_PATH}
-    -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
-    -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/google-cloud-cpp
-    -Dnlohmann_json_DIR:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/nlohmann_json/lib/cmake/nlohmann_json
-    -DProtobuf_DIR:PATH=${_FINDPACKAGE_PROTOBUF_CONFIG_DIR}
-    -DCrc32c_DIR:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/crc32c/lib/cmake/Crc32c
-  PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
-  DEPENDS grpc c-ares protobuf crc32c absl nlohmann-json
-)
+# # Build google-cloud-cpp
+# #
+# ExternalProject_Add(google-cloud-cpp
+#   PREFIX google-cloud-cpp
+#   GIT_REPOSITORY "https://github.com/googleapis/google-cloud-cpp.git"
+#   GIT_TAG "v1.23.0"
+#   SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/google-cloud-cpp/src/google-cloud-cpp"
+#   CMAKE_CACHE_ARGS
+#     ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
+#     ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
+#     -DGOOGLE_CLOUD_CPP_DEPENDENCY_PROVIDER:STRING=package
+#     -DBUILD_TESTING:BOOL=OFF
+#     -DCMAKE_PREFIX_PATH:PATH=${GCS_CMAKE_PREFIX_PATH}
+#     -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+#     -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/google-cloud-cpp
+#     -Dnlohmann_json_DIR:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/nlohmann_json/lib/cmake/nlohmann_json
+#     -DProtobuf_DIR:PATH=${_FINDPACKAGE_PROTOBUF_CONFIG_DIR}
+#     -DCrc32c_DIR:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/crc32c/lib/cmake/Crc32c
+#   PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
+#   DEPENDS grpc c-ares protobuf crc32c absl nlohmann-json
+# )
 
 #
-# Build azure-storage-cpplite
-#
-ExternalProject_Add(azure-storage-cpplite
-  PREFIX azure-storage-cpplite
-  GIT_REPOSITORY "https://github.com/Azure/azure-storage-cpplite.git"
-  GIT_TAG "v0.3.0"
-  SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/azure-storage-cpplite/src/azure-storage-cpplite"
-  CMAKE_CACHE_ARGS
-    ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
-    ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
-    -DBUILD_SHARED_LIBS:BOOL=OFF
-    -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
-    -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-    -DCURL_INCLUDE_DIR:STRING=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/curl/include
-    -DCURL_LIBRARY:STRING=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/curl/lib
-    -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/azure-storage-cpplite
-  PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
-  DEPENDS curl
-)
+# # Build azure-storage-cpplite
+# #
+# ExternalProject_Add(azure-storage-cpplite
+#   PREFIX azure-storage-cpplite
+#   GIT_REPOSITORY "https://github.com/Azure/azure-storage-cpplite.git"
+#   GIT_TAG "v0.3.0"
+#   SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/azure-storage-cpplite/src/azure-storage-cpplite"
+#   CMAKE_CACHE_ARGS
+#     ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
+#     ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
+#     -DBUILD_SHARED_LIBS:BOOL=OFF
+#     -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+#     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+#     -DCURL_INCLUDE_DIR:STRING=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/curl/include
+#     -DCURL_LIBRARY:STRING=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/curl/lib
+#     -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/azure-storage-cpplite
+#   PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
+#   DEPENDS curl
+# )
 
 #
 # Build CNMeM (CUDA memory management library)
@@ -451,22 +451,22 @@ ExternalProject_Add(cnmem
   PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
 )
 
-#
-# Build aws-sdk-cpp
-#
-ExternalProject_Add(aws-sdk-cpp
-  PREFIX aws-sdk-cpp
-  GIT_REPOSITORY "https://github.com/aws/aws-sdk-cpp.git"
-  GIT_TAG "1.8.186"
-  SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/aws-sdk-cpp/src/aws-sdk-cpp"
-  CMAKE_CACHE_ARGS
-    ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
-    ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
-    -DBUILD_ONLY:STRING=s3
-    -DBUILD_SHARED_LIBS:BOOL=OFF
-    -DMINIMIZE_SIZE:BOOL=ON
-    -DENABLE_TESTING:BOOL=OFF
-    -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
-    -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/aws-sdk-cpp
-  PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
-)
+# #
+# # Build aws-sdk-cpp
+# #
+# ExternalProject_Add(aws-sdk-cpp
+#   PREFIX aws-sdk-cpp
+#   GIT_REPOSITORY "https://github.com/aws/aws-sdk-cpp.git"
+#   GIT_TAG "1.8.186"
+#   SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/aws-sdk-cpp/src/aws-sdk-cpp"
+#   CMAKE_CACHE_ARGS
+#     ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
+#     ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
+#     -DBUILD_ONLY:STRING=s3
+#     -DBUILD_SHARED_LIBS:BOOL=OFF
+#     -DMINIMIZE_SIZE:BOOL=ON
+#     -DENABLE_TESTING:BOOL=OFF
+#     -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+#     -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/aws-sdk-cpp
+#   PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
+# )
