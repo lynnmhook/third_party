@@ -198,17 +198,17 @@ ExternalProject_Add(absl
 # Source is from grpc-repo so don't need PATCH_COMMAND to install
 # source for this target.
 #
-ExternalProject_Add(googletest
-  PREFIX protobuf
-  SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/grpc-repo/src/grpc/third_party/googletest"
-  DOWNLOAD_COMMAND ""
-  CMAKE_CACHE_ARGS
-    ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
-    ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
-    -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-    -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/googletest
-  DEPENDS grpc-repo
-)
+# ExternalProject_Add(googletest
+#   PREFIX protobuf
+#   SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/grpc-repo/src/grpc/third_party/googletest"
+#   DOWNLOAD_COMMAND ""
+#   CMAKE_CACHE_ARGS
+#     ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
+#     ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
+#     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+#     -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/googletest
+#   DEPENDS grpc-repo
+# )
 
 # Location where protobuf-config.cmake will be installed varies by
 # platform
